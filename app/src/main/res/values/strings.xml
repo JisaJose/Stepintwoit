@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Stepin2it</string>
+    <string name="error_password">Your password should be 6 in lentgh</string>
+    <string name="error_email">Your emailid is not valied</string>
+    <string name="save_msg">Your values are saved</string>
+    <string name="token_msg">Your email is not valied</string>
+</resources>
