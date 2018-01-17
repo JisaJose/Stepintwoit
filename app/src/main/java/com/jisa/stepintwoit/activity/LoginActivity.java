@@ -92,7 +92,7 @@ loginAsynTask.execute(email,password);
                 e.printStackTrace();
             }
             HttpHandler shandler = new HttpHandler(mUrl,jsonObj.toString());
-            String jsonStr = shandler.makeServiceCall(mUrl);
+            String jsonStr = shandler.makeServiceCall();
             JSONObject responceJsonObject= null;
             try {
                 responceJsonObject = new JSONObject(jsonStr);

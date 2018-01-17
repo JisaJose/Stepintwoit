@@ -26,51 +26,34 @@ public class HttpHandler {
 
 
     public HttpHandler(String url, String jsonPostData) {
-
-
         mUrl = url;
         mJsonPostData = jsonPostData;
     }
-    public HttpHandler() {
 
-
-
-
-    }
     public String makeServiceCall() {
 
         try {
-            // This is getting the url from the string we passed in
             URL url = new URL(mUrl);
-
-            // Create the urlConnection
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
-
-            urlConnection.setDoInput(true);
-            urlConnection.setDoOutput(true);
-
-            urlConnection.setRequestProperty("Content-Type", "application/json");
-
-            urlConnection.setRequestMethod("POST");
-
-
-            // OPTIONAL - Sets an authorization header
-//            urlConnection.setRequestProperty("Authorization", "someAuthString");
-
-            // Send the post body
             if (this.mJsonPostData != null) {
+                urlConnection.setDoInput(true);
+                urlConnection.setDoOutput(true);
+
+                urlConnection.setRequestProperty("Content-Type", "application/json");
+                urlConnection.setRequestMethod("POST");
                 OutputStreamWriter writer = new OutputStreamWriter(urlConnection.getOutputStream());
                 writer.write(mJsonPostData);
                 writer.flush();
+            } else {
+
+                urlConnection.setRequestMethod("GET");
             }
 
             int statusCode = urlConnection.getResponseCode();
-
+            Log.e(HttpHandler.class.getSimpleName()," The status code is "+statusCode);
             if (statusCode == 200) {
-
                 InputStream inputStream = new BufferedInputStream(urlConnection.getInputStream());
-
                 String response = convertInputStreamToString(inputStream);
                 return response;
 
@@ -83,27 +66,6 @@ public class HttpHandler {
 
         } catch (Exception e) {
             Log.d(TAG, e.getLocalizedMessage());
-        }
-        return null;
-    }
-
-    public String makeServiceCall(String reqUrl) {
-        String result = null;
-        try {
-            URL url = new URL(reqUrl);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
-            InputStream inputStream = new BufferedInputStream(conn.getInputStream());
-            result = convertStreamToString(inputStream);
-            return result;
-        } catch (MalformedURLException e) {
-            Log.e(TAG, "MalformedURLException: " + e.getMessage());
-        } catch (ProtocolException e) {
-            Log.e(TAG, "ProtocolException: " + e.getMessage());
-        } catch (IOException e) {
-            Log.e(TAG, "IOException: " + e.getMessage());
-        } catch (Exception e) {
-            Log.e(TAG, "Exception: " + e.getMessage());
         }
         return null;
     }
@@ -123,27 +85,7 @@ public class HttpHandler {
 
         return total.toString();
     }
-
-    private String convertStreamToString(InputStream is) {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        StringBuilder sb = new StringBuilder();
-
-        String line;
-        try {
-            while ((line = reader.readLine()) != null) {
-                sb.append(line).append('\n');
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                is.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return sb.toString();
-    }
-
 }
+
+
 
