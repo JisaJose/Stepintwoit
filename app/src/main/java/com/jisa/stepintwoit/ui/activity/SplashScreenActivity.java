@@ -1,4 +1,4 @@
-package com.jisa.stepintwoit.activity;
+package com.jisa.stepintwoit.ui.activity;
 
 import android.content.Intent;
 import android.os.Handler;
