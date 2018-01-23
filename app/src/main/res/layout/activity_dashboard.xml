@@ -12,14 +12,15 @@
         android:layout_height="wrap_content"
         android:text="Your Email Id" />
 
+
     <EditText
         android:id="@+id/edt_disp_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/txt_display_email" />
+        android:layout_below="@+id/txt_display_email"/>
 
     <Button
-        android:id="@+id/btn_logout"
+      android:id="@+id/btn_logout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/edt_disp_email"
@@ -32,7 +33,7 @@
         android:text="Logout"
         tools:ignore="OnClick" />
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view"
+       android:id="@+id/recycler_view"
         android:layout_below="@+id/btn_logout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

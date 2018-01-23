@@ -16,7 +16,7 @@ public class SharedpreferenceUtils {
 
     }
 
-    public void store(String key, String value ) {
+    public void store(String key, String value) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(key, value);

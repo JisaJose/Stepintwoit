@@ -47,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_submit)
     public void login(View view) {
-String email=edtEmail.getText().toString();
+        String email = edtEmail.getText().toString();
         String password = edtPassword.getText().toString();
 //        boolean isValidEmail = ValidationUtils.isValidEmail(edtEmail.getText().toString());
         int lengthPassword = password.length();
@@ -55,21 +55,22 @@ String email=edtEmail.getText().toString();
 //            Toast toast = Toast.makeText(this, getResources().getString(R.string.error_email), Toast.LENGTH_LONG);
 //            toast.show();
 //        }
-       if (lengthPassword < 6) {
+        if (lengthPassword < 6) {
             Toast toast = Toast.makeText(this, getResources().getString(R.string.error_password), Toast.LENGTH_LONG);
             toast.show();
         } else {
-LoginAsynTask loginAsynTask=  new LoginAsynTask(Utils.URL_POST);
-loginAsynTask.execute(email,password);
+            LoginAsynTask loginAsynTask = new LoginAsynTask(Utils.URL_POST);
+            loginAsynTask.execute(email, password);
 
 
         }
     }
 
     private class LoginAsynTask extends AsyncTask<String, Integer, String> {
-       String mUrl;
-        public LoginAsynTask(String url){
-            mUrl=url;
+        String mUrl;
+
+        public LoginAsynTask(String url) {
+            mUrl = url;
         }
 
         @Override
@@ -85,17 +86,17 @@ loginAsynTask.execute(email,password);
             JSONObject jsonObj = new JSONObject();
             try {
                 jsonObj.put("email", params[0]);
-                jsonObj.put("password",params[1] );
+                jsonObj.put("password", params[1]);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            HttpHandler shandler = new HttpHandler(mUrl,jsonObj.toString());
+            HttpHandler shandler = new HttpHandler(mUrl, jsonObj.toString());
             String jsonStr = shandler.makeServiceCall();
-            JSONObject responceJsonObject= null;
+            JSONObject responceJsonObject = null;
             try {
                 responceJsonObject = new JSONObject(jsonStr);
-                String tokenValue=responceJsonObject.getString("token");
-                Log.e("testtoken","your token is"+tokenValue);
+                String tokenValue = responceJsonObject.getString("token");
+                Log.e("testtoken", "your token is" + tokenValue);
                 return tokenValue;
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -112,7 +113,7 @@ loginAsynTask.execute(email,password);
 //                    publishProgress(i);
 //                }
 
-                return  null;
+            return null;
 
 
         }
@@ -130,8 +131,8 @@ loginAsynTask.execute(email,password);
             pgbLogin.setVisibility(View.GONE);
             txtProgressbar.setVisibility(View.GONE);
             SharedpreferenceUtils sharedpreferenceUtils = new SharedpreferenceUtils(LoginActivity.this);
-          sharedpreferenceUtils.store(Utils.KEY_TOKEN,result);
-            sharedpreferenceUtils.store(Utils.KEY_EMAILID,edtEmail.getText().toString());
+            sharedpreferenceUtils.store(Utils.KEY_TOKEN, result);
+            sharedpreferenceUtils.store(Utils.KEY_EMAILID, edtEmail.getText().toString());
             Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
             intent.putExtra(Utils.EXTRA_EMAILID, edtEmail.getText().toString());
             startActivity(intent);

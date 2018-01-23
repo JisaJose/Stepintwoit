@@ -5,40 +5,40 @@ package com.jisa.stepintwoit.models;
  */
 
 public class User {
-    int id;
-    int userId;
-    String title;
-    String body;
+    String name;
+    String description;
+    String image;
+    String phone;
 
-    public int getId() {
-        return id;
+    public String getName() {
+        return name;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public int getUserId() {
-        return userId;
+    public String getDescription() {
+        return description;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public String getTitle() {
-        return title;
+    public String getImage() {
+        return image;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setImage(String image) {
+        this.image = image;
     }
 
-    public String getBody() {
-        return body;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setBody(String body) {
-        this.body = body;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

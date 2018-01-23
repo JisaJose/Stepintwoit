@@ -10,7 +10,7 @@
         android:id="@+id/txt_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Emai id" />
+        android:text="Emai name" />
 
     <EditText
         android:id="@+id/edt_email"
@@ -23,7 +23,7 @@
         android:id="@+id/txt_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/edt_email"
+        android:layout_below="@+id/edt_email"
         android:text="Password" />
 
     <EditText

@@ -39,12 +39,13 @@ public class DashboardActivity extends AppCompatActivity {
     Button btnLogout;
     SharedpreferenceUtils sharedpreferenceUtils;
     ArrayList<User> globalUserArrayList;
-    String url = Utils.URL_GET;
+    String url = Utils.URL_PHONEDETALS;
     SQLiteHelper sqLiteHelper = new SQLiteHelper(this, Utils.DATABASE_NAME, null, Utils.DATABASE_VERSION);
     SQLiteDatabase sqLiteDatabase;
     User user;
     private RecyclerView recyclerView;
     private UserAdapter mUserAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +54,7 @@ public class DashboardActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         globalUserArrayList = new ArrayList<>();
-        mUserAdapter = new UserAdapter(globalUserArrayList);
+        mUserAdapter = new UserAdapter(globalUserArrayList, this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -62,16 +63,17 @@ public class DashboardActivity extends AppCompatActivity {
         sharedpreferenceUtils = new SharedpreferenceUtils(this);
         String emailId = sharedpreferenceUtils.getValue(Utils.KEY_EMAILID);
         edtDisplayEmail.setText(emailId);
+//        sqLiteHelper.deleteAll();
 
 
-
-        DataAsync dataAsync = new DataAsync(this, Utils.URL_GET);
+        DataAsync dataAsync = new DataAsync(this, Utils.URL_PHONEDETALS);
         dataAsync.execute();
 
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                sqLiteHelper.deleteAll();
+                edtDisplayEmail.clearComposingText();
                 sharedpreferenceUtils.store(Utils.KEY_EMAILID, null);
                 Intent intent = new Intent(DashboardActivity.this, LoginActivity.class);
                 startActivity(intent);
@@ -99,35 +101,42 @@ public class DashboardActivity extends AppCompatActivity {
         @Override
         protected ArrayList<User> doInBackground(Void... arg0) {
             boolean isMakeApi = sqLiteHelper.isMakeApiCall();
-            if (isMakeApi == true ) {
+            if (isMakeApi == true) {
 
                 HttpHandler shandler = new HttpHandler(mUrl, null);
                 String jsonServerResponse = shandler.makeServiceCall();
                 if (jsonServerResponse != null) {
                     try {
                         ArrayList<User> localUserArrayList = new ArrayList<>();
-                        JSONArray userJsonArray = new JSONArray(jsonServerResponse);
+                        JSONObject jsonObj = new JSONObject(jsonServerResponse);
+                        JSONArray userJsonArray = jsonObj.getJSONArray("products");
                         for (int i = 0; i < userJsonArray.length(); i++) {
-                            JSONObject jsonObj = userJsonArray.getJSONObject(i);
+                            jsonObj = userJsonArray.getJSONObject(i);
                             User user = new User();
-                            user.setId(jsonObj.getInt("id"));
-                            user.setUserId(jsonObj.getInt("userId"));
-                            user.setTitle(jsonObj.getString("title"));
-                            user.setBody(jsonObj.getString("body"));
+                            user.setName(jsonObj.getString("name"));
+                            user.setDescription(jsonObj.getString("description"));
+                            user.setImage(jsonObj.getString("image"));
+                            user.setPhone(jsonObj.getString("phone"));
                             localUserArrayList.add(user);
+
                         }
+                        sqLiteHelper.insertUserDetails(localUserArrayList);
+                        sqLiteHelper.close();
                         return localUserArrayList;
                     } catch (final JSONException e) {
-                        return null;
+
                     }
                 }
-            }
-            else {
+            } else {
 
-                Log.e("NOAPI", "no api is called");
-                return
+
+                return sqLiteHelper.getUsers();
+
+
             }
 
+
+            return null;
         }
 
         @Override
@@ -139,19 +148,11 @@ public class DashboardActivity extends AppCompatActivity {
         protected void onPostExecute(ArrayList<User> result) {
             if (result != null) {
                 globalUserArrayList.addAll(result);
-//                sqLiteDatabase =sqLiteHelper.getWritableDatabase();
-                sqLiteHelper.insertUserDetails(globalUserArrayList);
-                sqLiteHelper.close();
                 mUserAdapter.notifyDataSetChanged();
             } else {
                 Toast toast = Toast.makeText(context, "There is an error ", Toast.LENGTH_LONG);
                 toast.show();
             }
-//            Log.e("SIZE", "the size of this arraylist" + result.size());
-
-            Log.e("SIZE", "row inserted");
-
-
         }
 
 

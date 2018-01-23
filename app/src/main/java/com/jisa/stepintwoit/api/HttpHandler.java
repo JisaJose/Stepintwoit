@@ -51,7 +51,7 @@ public class HttpHandler {
             }
 
             int statusCode = urlConnection.getResponseCode();
-            Log.e(HttpHandler.class.getSimpleName()," The status code is "+statusCode);
+            Log.e(HttpHandler.class.getSimpleName(), " The status code is " + statusCode);
             if (statusCode == 200) {
                 InputStream inputStream = new BufferedInputStream(urlConnection.getInputStream());
                 String response = convertInputStreamToString(inputStream);

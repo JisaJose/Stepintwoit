@@ -24,12 +24,10 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        {
-            String sql = "CREATE TABLE " + Utils.TABLE_NAME + "(" + Utils.USER_ID + " INTEGER ," + Utils.ID + " INTEGER ," + Utils.TITLE +
-                    " TEXT ," + Utils.BODY + " TEXT );";
-            db.execSQL(sql);
-            Log.e("TABLE", "TABLE CREATED");
-        }
+        String sql = "CREATE TABLE " + Utils.TABLE_NAME + "(" + Utils.NAME + " TEXT ," + Utils.DESCRIPTION + " TEXT ," + Utils.IMAGE +
+                " TEXT ," + Utils.PHONE + " TEXT );";
+        db.execSQL(sql);
+        Log.e("TABLE", "TABLE CREATED");
     }
 
     public void insertUserDetails(ArrayList<User> userArrayList) {
@@ -37,10 +35,10 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         for (int i = 0; i < userArrayList.size(); i++) {
             User user = userArrayList.get(i);
             ContentValues values = new ContentValues();
-            values.put(Utils.USER_ID, user.getUserId());
-            values.put(Utils.ID, user.getId());
-            values.put(Utils.TITLE, user.getTitle());
-            values.put(Utils.BODY, user.getBody());
+            values.put(Utils.NAME, user.getName());
+            values.put(Utils.DESCRIPTION, user.getDescription());
+            values.put(Utils.IMAGE, user.getImage());
+            values.put(Utils.PHONE, user.getPhone());
             db.insert(Utils.TABLE_NAME, null, values);
         }
         db.close();
@@ -49,8 +47,8 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
     public boolean isMakeApiCall() {
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cur = db.rawQuery("SELECT COUNT(*) FROM " + Utils.TABLE_NAME,null);
-        if (cur != null) {
+        Cursor cur = db.rawQuery("SELECT COUNT(*) FROM " + Utils.TABLE_NAME, null);
+        if (cur != null) {//there is dada
             cur.moveToFirst();
             // Always one row returned.
             if (cur.getInt(0) == 0) {               // Zero count means empty table.
@@ -58,6 +56,31 @@ public class SQLiteHelper extends SQLiteOpenHelper {
             }
         }
         return false;
+    }
+
+    public void deleteAll() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(Utils.TABLE_NAME, null, null);
+        db.close();
+    }
+
+    public ArrayList<User> getUsers() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ArrayList<User> list = new ArrayList<>();
+        Cursor cursor = db.rawQuery("select * from " + Utils.TABLE_NAME, null);
+        if (cursor != null && cursor.moveToFirst()) {
+            while (cursor.moveToNext()) {
+                User user = new User();
+                user.setName("d-" + cursor.getString(cursor.getColumnIndex(Utils.NAME)));
+                user.setDescription(cursor.getString(cursor.getColumnIndex(Utils.DESCRIPTION)));
+                user.setPhone(cursor.getString(cursor.getColumnIndex(Utils.PHONE)));
+                user.setImage(cursor.getString(cursor.getColumnIndex(Utils.IMAGE)));
+                list.add(user);
+            }
+            return list;
+        } else {
+            return null;
+        }
     }
 
     @Override
