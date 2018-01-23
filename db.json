@@ -1,0 +1,42 @@
+{
+  "productData": {
+    "products": [
+      {
+        "name": "iPhone X",
+        "description": " Description of iPhone X",
+        "image": "https://c.slashgear.com/wp-content/uploads/2017/09/apple-iphone-x-space-gray-0-200x200.jpg",
+        "phone": "+1 (437) 922-8906",
+        "web": "https://www.facebook.com/stepin2it/"
+      },
+      {
+        "name": "iPhone 8",
+        "description": " Description of iPhone 8",
+        "image": "https://static.turbosquid.com/Preview/001200/703/6B/iphone-8-3D-model_200.jpg",
+        "phone": "+1 (437) 922-8906",
+        "web": "https://www.bestbuy.ca/"
+      },
+      {
+        "name": "iPhone 7",
+        "description": " Description of iPhone 7",
+        "image": "https://cdn2.tgdd.vn/Products/Images/42/87837/iphone-7-128gb-3-200x200.jpg",
+        "phone": "+1 (437) 922-8906",
+        "web": "https://www.facebook.com/stepin2it/"
+      },
+      {
+        "name": "iPhone SE",
+        "description": " Description of iPhone X",
+        "image": "https://i-cdn.phonearena.com/images/article/80464-image/Lead-times-for-the-Apple-iPhone-SE-continue-to-show-strong-demand-for-the-phone.jpg",
+        "phone": "+1 (437) 922-8906",
+        "web": "https://www.staples.ca/"
+      },
+      {
+        "name": "iPhone 6",
+        "description": " Description of iPhone X",
+        "image": "https://imei24.com/img/apple/17_08_59_Apple_iPhone_6_Plus_3.jpeg",
+        "phone": "+1 (437) 922-8906",
+        "web": "https://www.facebook.com/stepin2it/"
+      }
+    ],
+    "dataFrom": "Stepin2IT"
+  }
+}
