@@ -11,6 +11,7 @@ public class Utils {
     public static final String KEY_TOKEN = "token";
     public static final String URL_GETUSERDETALS = "https://jsonplaceholder.typicode.com/posts";
     public static final String URL_PHONEDETALS = "http://my-json-server.typicode.com/JisaJose/Stepintwoit/productData";
+    public static final String BASE_URL="http://my-json-server.typicode.com";
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "SQLiteDatabase.db";
 

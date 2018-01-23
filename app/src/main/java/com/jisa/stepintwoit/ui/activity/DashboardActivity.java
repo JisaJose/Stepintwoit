@@ -9,16 +9,18 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.jisa.stepintwoit.R;
+import com.jisa.stepintwoit.api.APIInterface;
 import com.jisa.stepintwoit.api.HttpHandler;
+import com.jisa.stepintwoit.api.RetrofitApi;
 import com.jisa.stepintwoit.database.SQLiteHelper;
-import com.jisa.stepintwoit.models.User;
+import com.jisa.stepintwoit.models.Product;
+import com.jisa.stepintwoit.models.ProductResponse;
 import com.jisa.stepintwoit.ui.adapters.UserAdapter;
 import com.jisa.stepintwoit.utils.SharedpreferenceUtils;
 import com.jisa.stepintwoit.utils.Utils;
@@ -31,6 +33,9 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class DashboardActivity extends AppCompatActivity {
     @BindView(R.id.edt_disp_email)
@@ -38,13 +43,15 @@ public class DashboardActivity extends AppCompatActivity {
     @BindView(R.id.btn_logout)
     Button btnLogout;
     SharedpreferenceUtils sharedpreferenceUtils;
-    ArrayList<User> globalUserArrayList;
+    ArrayList<Product> globalProductArrayList;
     String url = Utils.URL_PHONEDETALS;
     SQLiteHelper sqLiteHelper = new SQLiteHelper(this, Utils.DATABASE_NAME, null, Utils.DATABASE_VERSION);
     SQLiteDatabase sqLiteDatabase;
-    User user;
+    Product product;
     private RecyclerView recyclerView;
     private UserAdapter mUserAdapter;
+    APIInterface apiInterface;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +60,8 @@ public class DashboardActivity extends AppCompatActivity {
 //        edtDisplayEmail = (EditText) findViewById(R.id.edt_disp_email);
         ButterKnife.bind(this);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        globalUserArrayList = new ArrayList<>();
-        mUserAdapter = new UserAdapter(globalUserArrayList, this);
+        globalProductArrayList = new ArrayList<>();
+        mUserAdapter = new UserAdapter(globalProductArrayList, this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -63,11 +70,11 @@ public class DashboardActivity extends AppCompatActivity {
         sharedpreferenceUtils = new SharedpreferenceUtils(this);
         String emailId = sharedpreferenceUtils.getValue(Utils.KEY_EMAILID);
         edtDisplayEmail.setText(emailId);
-//        sqLiteHelper.deleteAll();
-
-
-        DataAsync dataAsync = new DataAsync(this, Utils.URL_PHONEDETALS);
-        dataAsync.execute();
+        apiInterface = RetrofitApi.getClient().create(APIInterface.class);
+        getProducts();
+// we are using Asyncclass
+//        DataAsync dataAsync = new DataAsync(this, Utils.URL_PHONEDETALS);
+//        dataAsync.execute();
 
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,15 +89,30 @@ public class DashboardActivity extends AppCompatActivity {
         });
     }
 
+    private void getProducts() {
+        Call<ProductResponse> call = apiInterface.getProducts();
+        call.enqueue(new Callback<ProductResponse>() {
+            @Override
+            public void onResponse(Call<ProductResponse> call, Response<ProductResponse> response) {
+                ProductResponse productResponse = response.body();
+                globalProductArrayList.addAll(productResponse.products);
+                mUserAdapter.notifyDataSetChanged();
+            }
 
-    private class DataAsync extends AsyncTask<Void, Integer, ArrayList<User>> {
+            @Override
+            public void onFailure(Call<ProductResponse> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
+    private class DataAsync extends AsyncTask<Void, Integer, ArrayList<Product>> {
         private Context context;
         String mUrl;
 
         public DataAsync(Context context, String url) {
             this.context = context;
             mUrl = url;
-
         }
 
         @Override
@@ -99,7 +121,7 @@ public class DashboardActivity extends AppCompatActivity {
         }
 
         @Override
-        protected ArrayList<User> doInBackground(Void... arg0) {
+        protected ArrayList<Product> doInBackground(Void... arg0) {
             boolean isMakeApi = sqLiteHelper.isMakeApiCall();
             if (isMakeApi == true) {
 
@@ -107,22 +129,22 @@ public class DashboardActivity extends AppCompatActivity {
                 String jsonServerResponse = shandler.makeServiceCall();
                 if (jsonServerResponse != null) {
                     try {
-                        ArrayList<User> localUserArrayList = new ArrayList<>();
+                        ArrayList<Product> localProductArrayList = new ArrayList<>();
                         JSONObject jsonObj = new JSONObject(jsonServerResponse);
                         JSONArray userJsonArray = jsonObj.getJSONArray("products");
                         for (int i = 0; i < userJsonArray.length(); i++) {
                             jsonObj = userJsonArray.getJSONObject(i);
-                            User user = new User();
-                            user.setName(jsonObj.getString("name"));
-                            user.setDescription(jsonObj.getString("description"));
-                            user.setImage(jsonObj.getString("image"));
-                            user.setPhone(jsonObj.getString("phone"));
-                            localUserArrayList.add(user);
+                            Product product = new Product();
+                            product.setName(jsonObj.getString("name"));
+                            product.setDescription(jsonObj.getString("description"));
+                            product.setImage(jsonObj.getString("image"));
+                            product.setPhone(jsonObj.getString("phone"));
+                            localProductArrayList.add(product);
 
                         }
-                        sqLiteHelper.insertUserDetails(localUserArrayList);
+                        sqLiteHelper.insertUserDetails(localProductArrayList);
                         sqLiteHelper.close();
-                        return localUserArrayList;
+                        return localProductArrayList;
                     } catch (final JSONException e) {
 
                     }
@@ -145,9 +167,9 @@ public class DashboardActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(ArrayList<User> result) {
+        protected void onPostExecute(ArrayList<Product> result) {
             if (result != null) {
-                globalUserArrayList.addAll(result);
+                globalProductArrayList.addAll(result);
                 mUserAdapter.notifyDataSetChanged();
             } else {
                 Toast toast = Toast.makeText(context, "There is an error ", Toast.LENGTH_LONG);

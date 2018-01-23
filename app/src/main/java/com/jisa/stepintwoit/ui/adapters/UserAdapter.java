@@ -13,19 +13,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.jisa.stepintwoit.R;
-import com.jisa.stepintwoit.models.User;
+import com.jisa.stepintwoit.models.Product;
 
 import java.util.List;
-
-import static java.lang.System.load;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> {
     Context mcontext;
 
 
-    private List<User> userList;
+    private List<Product> productList;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView txtName, txtDescription, txtPhone;
@@ -41,8 +38,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> 
     }
 
 
-    public UserAdapter(List<User> userList, Context context) {
-        this.userList = userList;
+    public UserAdapter(List<Product> productList, Context context) {
+        this.productList = productList;
         mcontext = context;
     }
 
@@ -56,13 +53,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> 
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        User user = userList.get(position);
-        holder.txtName.setText("Name: " + user.getName());
-        holder.txtDescription.setText("Description: " + user.getDescription());
-        holder.txtPhone.setText("Name: " + user.getPhone());
+        Product product = productList.get(position);
+        holder.txtName.setText("Name: " + product.getName());
+        holder.txtDescription.setText("Description: " + product.getDescription());
+        holder.txtPhone.setText("Name: " + product.getPhone());
 
         Glide.with(mcontext)
-                .load(user.getImage())
+                .load(product.getImage())
                 .override(100, 200)
                 .fitCenter() // scale to fit entire image within ImageView
                 .into(holder.img_PhoneImage);
@@ -71,6 +68,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> 
     @Override
     public int getItemCount() {
 
-        return userList != null ? userList.size() : 0;
+        return productList != null ? productList.size() : 0;
     }
 }

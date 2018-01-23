@@ -4,7 +4,7 @@ package com.jisa.stepintwoit.models;
  * Created by jisajose on 2018-01-17.
  */
 
-public class User {
+public class Product {
     String name;
     String description;
     String image;
