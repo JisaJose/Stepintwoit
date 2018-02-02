@@ -13,7 +13,6 @@ public class SharedpreferenceUtils {
 
     public SharedpreferenceUtils(Context context) {
         mContext = context;
-
     }
 
     public void store(String key, String value) {

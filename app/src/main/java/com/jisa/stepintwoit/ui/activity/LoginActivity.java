@@ -49,20 +49,21 @@ public class LoginActivity extends AppCompatActivity {
     public void login(View view) {
         String email = edtEmail.getText().toString();
         String password = edtPassword.getText().toString();
+        /**
+         * Email validation
+         */
 //        boolean isValidEmail = ValidationUtils.isValidEmail(edtEmail.getText().toString());
-        int lengthPassword = password.length();
 //        if (!isValidEmail) {
 //            Toast toast = Toast.makeText(this, getResources().getString(R.string.error_email), Toast.LENGTH_LONG);
 //            toast.show();
 //        }
+        int lengthPassword = password.length();
         if (lengthPassword < 6) {
             Toast toast = Toast.makeText(this, getResources().getString(R.string.error_password), Toast.LENGTH_LONG);
             toast.show();
         } else {
             LoginAsynTask loginAsynTask = new LoginAsynTask(Utils.URL_POST);
             loginAsynTask.execute(email, password);
-
-
         }
     }
 
@@ -90,6 +91,7 @@ public class LoginActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+//            calling api using http handler
             HttpHandler shandler = new HttpHandler(mUrl, jsonObj.toString());
             String jsonStr = shandler.makeServiceCall();
             JSONObject responceJsonObject = null;
@@ -114,8 +116,6 @@ public class LoginActivity extends AppCompatActivity {
 //                }
 
             return null;
-
-
         }
 
         @Override

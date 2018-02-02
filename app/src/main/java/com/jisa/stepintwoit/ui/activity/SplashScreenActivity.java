@@ -12,7 +12,7 @@ import com.jisa.stepintwoit.utils.Utils;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
-    private int SPLASH_DISPLAY_LENGTH = 5000;
+    private int SPLASH_DISPLAY_LENGTH = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +27,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         }, SPLASH_DISPLAY_LENGTH);
     }
 
+    //checking if the email id is registered or not
     private void checkUser() {
         SharedpreferenceUtils sharedpreferenceUtils = new SharedpreferenceUtils(this);
         String emailId = sharedpreferenceUtils.getValue(Utils.KEY_EMAILID);

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.jisa.stepintwoit.ui.activity.PhoneDetailsActivity">
+
+    <ImageView
+        android:id="@+id/phDetailsImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="25dp"
+        app:srcCompat="@drawable/img"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+    <TextView
+        android:id="@+id/txtPhDetailsName"
+        android:layout_width="wrap_content"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imageFavorateButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="59dp"
+        android:layout_marginStart="59dp"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/txtPhDetailsDes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_alignLeft="@+id/txtPhDetailsName"
+        android:layout_alignStart="@+id/txtPhDetailsName"
+        android:layout_below="@+id/imageFavorateButton"
+        android:layout_marginTop="36dp"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/txtPhDetailsPhone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/txtPhDetailsDes"
+        android:layout_alignStart="@+id/txtPhDetailsDes"
+        android:layout_below="@+id/txtPhDetailsDes"
+        android:layout_marginTop="55dp"
+        android:textColor="@color/colorPrimaryDark"
+        android:inputType="phone"
+        android:text="TextView" />
+
+    <CheckBox
+        android:id="@+id/imageFavorateButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="21dp"
+        android:layout_marginRight="21dp"
+       />
+
+</RelativeLayout>

@@ -5,4 +5,5 @@
     <color name="colorAccent">#FF4081</color>
     <color name="year">#999999</color>
     <color name="image">#222222</color>
+    <color name="bgcolor"> #00bfff</color>
 </resources>

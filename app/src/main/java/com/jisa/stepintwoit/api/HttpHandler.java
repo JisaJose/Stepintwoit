@@ -24,7 +24,6 @@ public class HttpHandler {
     private String mUrl;
     private String mJsonPostData;
 
-
     public HttpHandler(String url, String jsonPostData) {
         mUrl = url;
         mJsonPostData = jsonPostData;
@@ -39,7 +38,6 @@ public class HttpHandler {
             if (this.mJsonPostData != null) {
                 urlConnection.setDoInput(true);
                 urlConnection.setDoOutput(true);
-
                 urlConnection.setRequestProperty("Content-Type", "application/json");
                 urlConnection.setRequestMethod("POST");
                 OutputStreamWriter writer = new OutputStreamWriter(urlConnection.getOutputStream());
@@ -69,8 +67,6 @@ public class HttpHandler {
         }
         return null;
     }
-
-
     private String convertInputStreamToString(InputStream inputStream) {
         BufferedReader r = new BufferedReader(new InputStreamReader(inputStream));
         StringBuilder total = new StringBuilder();
@@ -82,7 +78,6 @@ public class HttpHandler {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return total.toString();
     }
 }
