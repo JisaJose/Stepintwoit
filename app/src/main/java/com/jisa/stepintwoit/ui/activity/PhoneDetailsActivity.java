@@ -44,7 +44,7 @@ public class PhoneDetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sqLiteHelper = new SQLiteHelper(this);
+        sqLiteHelper =  SQLiteHelper.getInstance(this);
         setContentView(R.layout.activity_phone_details);
         ButterKnife.bind(this);
         //parcing  from dashboard activity

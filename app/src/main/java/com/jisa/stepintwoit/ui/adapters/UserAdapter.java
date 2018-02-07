@@ -28,13 +28,14 @@ import butterknife.ButterKnife;
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> {
     private Context mcontext;
     private SQLiteHelper sqLiteHelper;
+    private static UserAdapter instance;
     private OnItemClickListener onItemClickListener;
     private List<Product> productList;
 
     public UserAdapter(List<Product> productList, Context context) {
         this.productList = productList;
         mcontext = context;
-        sqLiteHelper = new SQLiteHelper(context);
+        sqLiteHelper =  SQLiteHelper.getInstance(mcontext);
     }
 
     public interface OnItemClickListener {
@@ -58,7 +59,10 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> 
                 .load(product.getImage())
                 .override(100, 200)
                 .fitCenter() // scale to fit entire image within ImageView
+                .placeholder(R.drawable.error_image)
+                .error(R.drawable.noimagefound)
                 .into(holder.img_PhoneImage);
+
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {

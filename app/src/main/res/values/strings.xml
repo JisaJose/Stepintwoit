@@ -4,4 +4,5 @@
     <string name="error_email">Your emailid is not valied</string>
     <string name="save_msg">Your values are saved</string>
     <string name="token_msg">Your email is not valied</string>
+    <string name="NEXT">NEXT</string>
 </resources>

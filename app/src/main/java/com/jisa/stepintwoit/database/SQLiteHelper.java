@@ -20,8 +20,17 @@ import static com.jisa.stepintwoit.utils.Utils.TABLE_NAME_PRODUCT;
  */
 
 public class SQLiteHelper extends SQLiteOpenHelper {
-    public SQLiteHelper(Context context) {
+    private static SQLiteHelper instance;
+    private SQLiteHelper(Context context) {
         super(context, Utils.DATABASE_NAME, null, Utils.DATABASE_VERSION);
+    }
+
+    public static SQLiteHelper getInstance(Context context) {
+        if (instance == null) {
+            instance = new SQLiteHelper(context);
+        }
+        return instance;
+
     }
 
     @Override

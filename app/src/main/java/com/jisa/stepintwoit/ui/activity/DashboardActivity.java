@@ -1,9 +1,14 @@
 package com.jisa.stepintwoit.ui.activity;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -25,6 +30,8 @@ import com.jisa.stepintwoit.api.RetrofitApi;
 import com.jisa.stepintwoit.database.SQLiteHelper;
 import com.jisa.stepintwoit.models.Product;
 import com.jisa.stepintwoit.models.ProductResponse;
+import com.jisa.stepintwoit.service.Constants;
+import com.jisa.stepintwoit.service.ForegroundService;
 import com.jisa.stepintwoit.ui.adapters.UserAdapter;
 import com.jisa.stepintwoit.utils.SharedpreferenceUtils;
 import com.jisa.stepintwoit.utils.Utils;
@@ -41,12 +48,17 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.jisa.stepintwoit.R.*;
+import static com.jisa.stepintwoit.R.string.*;
+
 public class DashboardActivity extends AppCompatActivity {
-    @BindView(R.id.edt_disp_email)
+    @BindView(id.edt_disp_email)
     TextView edtDisplayEmail;
-    @BindView(R.id.btn_logout)
+    @BindView(id.btn_logout)
     Button btnLogout;
-    @BindView(R.id.recycler_view)
+    @BindView(id.btn_notify)
+    Button btnnotify;
+    @BindView(id.recycler_view)
     RecyclerView recyclerView;
     Product product;
     SharedpreferenceUtils sharedpreferenceUtils;
@@ -54,13 +66,13 @@ public class DashboardActivity extends AppCompatActivity {
     SQLiteHelper sqLiteHelper;
     private UserAdapter mUserAdapter;
     APIInterface apiInterface;
-
+    private IntentFilter intentFilter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dashboard);
-        sqLiteHelper = new SQLiteHelper(this);
+        setContentView(layout.activity_dashboard);
+        sqLiteHelper = SQLiteHelper.getInstance(this);
         View view = this.getCurrentFocus();
         if (view != null) {
             InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -98,16 +110,76 @@ public class DashboardActivity extends AppCompatActivity {
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sqLiteHelper.deleteAll();
-                edtDisplayEmail.clearComposingText();
-                sharedpreferenceUtils.store(Utils.KEY_EMAILID, null);
-                Intent intent = new Intent(DashboardActivity.this, LoginActivity.class);
-                startActivity(intent);
-                finish();
+//                sqLiteHelper.deleteAll();
+//                edtDisplayEmail.clearComposingText();
+//                sharedpreferenceUtils.store(Utils.KEY_EMAILID, null);
+//                Intent intent = new Intent(DashboardActivity.this, LoginActivity.class);
+//                startActivity(intent);
+//                finish();
+                Intent startIntent = new Intent(DashboardActivity.this, ForegroundService.class);
+                startIntent.setAction(Constants.ACTION.STARTFOREGROUND_ACTION);
+                getApplicationContext().startService(startIntent);
+
             }
         });
-    }
+        btnnotify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                addNotification();
+                Intent stopIntent = new Intent(DashboardActivity.this, ForegroundService.class);
+                stopIntent.setAction(Constants.ACTION.STOPFOREGROUND_ACTION);
+                getApplicationContext().startService(stopIntent);
 
+            }
+        });
+
+        intentFilter = new IntentFilter();
+        intentFilter.addAction(Constants.ACTION.NEXT_ACTION);
+        intentFilter.addAction(Constants.ACTION.PLAY_ACTION);
+        intentFilter.addAction(Constants.ACTION.PREV_ACTION);
+    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        registerReceiver(mReceiver, intentFilter);
+    }
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(Constants.ACTION.NEXT_ACTION)) {
+                Toast toast = Toast.makeText(DashboardActivity.this,"next",Toast.LENGTH_LONG);
+                toast.show();
+            } else if (intent.getAction().equals(Constants.ACTION.PLAY_ACTION)) {
+                Toast toast = Toast.makeText(DashboardActivity.this,"play",Toast.LENGTH_LONG);
+                toast.show();
+            } else if (intent.getAction().equals(Constants.ACTION.PREV_ACTION)) {
+                Toast toast = Toast.makeText(DashboardActivity.this,"prev",Toast.LENGTH_LONG);
+                toast.show();
+            }
+        }
+    };
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(mReceiver);
+    }
+    private void addNotification() {
+        NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(drawable.ic_stat_3d_rotation)
+                        .setContentTitle("Notifications Example")
+                        .setContentText("This is a test notification");
+
+        Intent notificationIntent = new Intent(this, DashboardActivity.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setContentIntent(contentIntent);
+
+        // Add as notification
+        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        manager.notify((int) System.currentTimeMillis(), builder.build());
+
+    }
 
 
     @Override
@@ -125,21 +197,22 @@ public class DashboardActivity extends AppCompatActivity {
 
         if (id == R.id.menu_profile) {
 
-            Intent intent = new Intent(this,ProfileActivity.class);
+            Intent intent = new Intent(this, ProfileActivity.class);
             this.startActivity(intent);
             return true;
         }
 
         if (id == R.id.menu_product_images) {
-            Intent intent = new Intent(this,ProductImageActivity.class);
+            Intent intent = new Intent(this, ProductImageActivity.class);
+            intent.putParcelableArrayListExtra(Utils.KEY_PRODUCTLIST, globalProductArrayList);
             this.startActivity(intent);
             return true;
         }
 
 
-
         return super.onOptionsItemSelected(item);
     }
+
     //Using retrofit to make api call and saving in sqlite
     private void getProducts() {
         final ProgressDialog progressdialog = new ProgressDialog(DashboardActivity.this);

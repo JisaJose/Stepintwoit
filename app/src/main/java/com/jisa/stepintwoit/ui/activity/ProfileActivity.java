@@ -51,7 +51,7 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-        sqLiteHelper = new SQLiteHelper(this);
+        sqLiteHelper =  SQLiteHelper.getInstance(this);
         ButterKnife.bind(this);
         sharedpreferenceUtils = new SharedpreferenceUtils(this);
         String emailId = sharedpreferenceUtils.getValue(Utils.KEY_EMAILID);

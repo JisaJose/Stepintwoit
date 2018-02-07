@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.facebook.stetho.Stetho;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.jisa.stepintwoit.R;
 import com.jisa.stepintwoit.utils.SharedpreferenceUtils;
 import com.jisa.stepintwoit.utils.Utils;
@@ -25,6 +27,12 @@ public class SplashScreenActivity extends AppCompatActivity {
                 checkUser();
             }
         }, SPLASH_DISPLAY_LENGTH);
+        try {
+            String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+            Log.d("Firbase id login", "Refreshed token: " + refreshedToken);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     //checking if the email id is registered or not

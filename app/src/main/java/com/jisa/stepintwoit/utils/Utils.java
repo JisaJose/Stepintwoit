@@ -39,6 +39,7 @@ public class Utils {
     public static final String KEY_NAME="nameProduct";
     public static final String KEY_DESCRIPTION="descriptionProduct";
     public static final String KEY_IMAGE_URL="url";
+    public static final String KEY_PRODUCTLIST="KEY_PRODUCTLIST";
     /**
      * Versions
      */
